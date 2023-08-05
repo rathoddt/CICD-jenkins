@@ -22,7 +22,7 @@ pipeline {
         stage('Build docker image') {
            steps {
                script {         
-                 def customImage = docker.build('test-tag', "./docker")
+                 def customImage = docker.build('diliprathod/petclinic', "./docker")
                  docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-cred') {
                  customImage.push("${env.BUILD_NUMBER}")
                  }                     
