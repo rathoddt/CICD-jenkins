@@ -9,8 +9,24 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: petclinic-deployment
+  # metrics:
+  # - type: Resource
+  #   resource:
+  #     name: memory
+  #     averageUtilization: 50
+
   metrics:
   - type: Resource
     resource:
       name: memory
-      averageUtilization: 50
+      target:
+        type: Utilization
+        averageUtilization: 50
+
+  # metrics:
+  # - type: Resource
+  #   resource:
+  #     name: cpu
+  #     target:
+  #       type: Utilization
+  #       averageUtilization: 50
