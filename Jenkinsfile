@@ -7,7 +7,7 @@ pipeline {
                         sh 'cp -R helm/* .'
 		                    sh 'ls -ltr'
                         sh 'pwd'
-                        sh '/usr/local/bin/helm upgrade --install petclinic-app petclinic  --set image.repository=diliprathod/petclinic --set image.tag=2'
+                        sh '/usr/local/bin/helm upgrade --install petclinic-app petclinic  --set image.repository=reigstry.hub.docker.com/diliprathod/petclinic --set image.tag=2'
               			
             }           
         }
