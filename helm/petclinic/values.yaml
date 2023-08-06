@@ -5,8 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: vigneshbc/petcliniclab
-  tag: 5
+  repository: diliprathod/petclinic
+  tag: 2
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
