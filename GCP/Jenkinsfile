@@ -1,0 +1,48 @@
+
+
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                // 
+                echo "Hello World"
+            }
+        }
+        stage('Test') {
+            steps {
+                //
+                            echo "Hello World"
+            }
+        }
+        stage('List GCP Buckets') {
+
+        steps {
+            sh "gcloud --version"
+            withCredentials([file(credentialsId: 'glogin-sa-key', variable: 'GCP_SA_USER')]) {
+                sh("gcloud auth activate-service-account --key-file=${GCP_SA_USER}")
+                sh(returnStdout:true, script: "gcloud config set project my-poc-dilip")
+                sh("gsutil ls gs://my-poc-dilip")
+            }
+         }
+        }//List GCP buckets
+
+        stage('List GCP Buckets') {
+
+        steps {
+            withCredentials([file(credentialsId: 'glogin-sa-key', variable: 'GCP_SA_USER')]) {
+                sh("gcloud auth activate-service-account --key-file=${GCP_SA_USER}")
+                sh(returnStdout:true, script: "gcloud config set project my-poc-dilip")
+                sh("gsutil ls gs://my-poc-dilip")
+            }
+         }
+        }//Creating VM
+         
+        stage('Deploy') {
+            steps {
+                            echo "Hello World"
+                            // sh(returnStdout:true, script: "gcloud config set project my-poc-dilip")
+            }
+        }
+    }
+}
