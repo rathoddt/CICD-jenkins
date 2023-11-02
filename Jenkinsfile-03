@@ -1,0 +1,53 @@
+
+
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                // 
+                echo "Hello World"
+            }
+        }
+        stage('Test') {
+            steps {
+                //
+                            echo "Hello World"
+            }
+        }
+        // stage('List GCP Buckets') {
+
+        // steps {
+        //     sh "gcloud --version"
+        //     withCredentials([file(credentialsId: 'glogin-sa-key', variable: 'GCP_SA_USER')]) {
+        //         sh("gcloud auth activate-service-account --key-file=${GCP_SA_USER}")
+        //         sh(returnStdout:true, script: "gcloud config set project my-poc-dilip")
+        //         sh("gsutil ls gs://my-poc-dilip")
+        //     }
+        //  }
+        // }//List GCP buckets
+
+        stage('Creating Compute Instance') {
+
+        steps {
+            withCredentials([file(credentialsId: 'glogin-sa-key', variable: 'GCP_SA_USER')]) {
+                sh("gcloud auth activate-service-account --key-file=${GCP_SA_USER}")
+                sh(returnStdout:true, script: "gcloud config set project my-poc-dilip")
+                sh "gcloud config list project"
+                echo 'Creating VM'
+                //sh("gcloud compute instances create vm-05-startuScript-chrome-jenkins --image-project=windows-cloud  --image-family=windows-2019-core   --metadata=windows-startup-script-ps1='$Path = $env:TEMP; $Installer = 'chrome_installer.exe'; Invoke-WebRequest https://dl.google.com/chrome/install/latest/chrome_installer.exe -OutFile $Path$Installer; Start-Process -FilePath $Path$Installer -Args '/silent /install' -Verb RunAs -Wait; Remove-Item $Path$Installer")
+                //sh(returnStdout:true, script:"gcloud compute instances create vm-gcloud-03 --project=my-poc-dilip --zone=us-west4-b --machine-type=e2-medium --metadata=script=build.ps1,para2=Dilip,location='c:\build'")
+                sh '''
+                   gcloud compute instances create vm-gcloud-04 --project=my-poc-dilip \
+                             --zone=us-west4-b --machine-type=e2-medium \
+                             --metadata=script=build.ps1,para2=Dilip,location='c:\build',windows-startup-script-url=gs://my-poc-dilip/startup-script.ps1 \
+                             --create-disk=auto-delete=no,boot=yes,device-name=vm-gcloud-with-chrome,image=projects/windows-cloud/global/images/windows-server-2016-dc-v20231011,mode=rw,size=50,type=projects/my-poc-dilip/zones/us-central1-a/diskTypes/pd-balanced
+                '''
+                //sh(returnStdout:true, script:"gcloud compute instances create my-first-instance-from-gcloud")
+                //sh(returnStdout:true, script:"gcloud compute instances create vm-gcloud-with-chrome --project=my-poc-dilip --zone=us-west4-b --machine-type=e2-medium --metadata=ps-cmd=\$Path\ =\ \$env:TEMP\;\ \$Installer\ =\ \"chrome_installer.exe\"\;\ Invoke-WebRequest\ \"https://dl.google.com/chrome/install/latest/chrome_installer.exe\"\ -OutFile\ \$Path\$Installer\;\ Start-Process\ -FilePath\ \$Path\$Installer\ -Args\ \"/silent\ /install\"\ -Verb\ RunAs\ -Wait\;\ Remove-Item\ \$Path\$Installer --create-disk=auto-delete=no,boot=yes,device-name=vm-gcloud-with-chrome,image=projects/windows-cloud/global/images/windows-server-2016-dc-v20231011,mode=rw,size=50,type=projects/my-poc-dilip/zones/us-central1-a/diskTypes/pd-balanced")
+            }
+         }
+        }//Creating VM
+
+    }
+}
